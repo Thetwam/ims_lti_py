@@ -1,9 +1,11 @@
+from __future__ import unicode_literals, absolute_import, print_function
+
 # Classes
-from tool_config import ToolConfig
-from tool_consumer import ToolConsumer
-from tool_provider import ToolProvider
-from outcome_request import OutcomeRequest
-from outcome_response import OutcomeResponse
+from ims_lti_py.tool_config import ToolConfig
+from ims_lti_py.tool_consumer import ToolConsumer
+from ims_lti_py.tool_provider import ToolProvider
+from ims_lti_py.outcome_request import OutcomeRequest
+from ims_lti_py.outcome_response import OutcomeResponse
 
 # Exceptions
-from utils import InvalidLTIConfigError, InvalidLTIRequestError
+from ims_lti_py.utils import InvalidLTIConfigError, InvalidLTIRequestError

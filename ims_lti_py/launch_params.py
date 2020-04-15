@@ -1,11 +1,12 @@
-from collections import defaultdict
-import sys
+from __future__ import unicode_literals, absolute_import, print_function
 
-py   = sys.version_info
-if py <  (2, 6, 0): bytes=str
+from collections import defaultdict
+
+from six import binary_type, iteritems, string_types, text_type
+
 
 def touni(s, enc='utf8', err='strict'):
-    return s.decode(enc, err) if isinstance(s, bytes) else unicode(s)
+    return s.decode(enc, err) if isinstance(s, binary_type) else text_type(s)
 
 
 # List of the standard launch parameters for an LTI launch
@@ -93,7 +94,7 @@ class LaunchParamsMixin(object):
         '''
         if roles_list and isinstance(roles_list, list):
             self.roles = [].extend(roles_list)
-        elif roles_list and isinstance(roles_list, basestring):
+        elif roles_list and isinstance(roles_list, string_types):
             self.roles = [role.lower() for role in roles_list.split(',')]
 
     def process_params(self, params):
@@ -102,7 +103,7 @@ class LaunchParamsMixin(object):
         the LAUNCH_DATA_PARAMETERS list, or that start with 'custom_' or
         'ext_'.
         '''
-        for key, val in params.items():
+        for key, val in iteritems(params):
             if key in LAUNCH_DATA_PARAMETERS and val != 'None':
                 if key == 'roles':
                     if isinstance(val, list):

@@ -1,0 +1,3 @@
+lxml
+python-oauth2
+six

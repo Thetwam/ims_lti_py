@@ -1,4 +1,7 @@
+from __future__ import unicode_literals, absolute_import, print_function
+
 import oauth2
+from six import iteritems
 
 
 class RequestValidatorMixin(object):
@@ -39,7 +42,7 @@ class RequestValidatorMixin(object):
             self.oauth_server.verify_request(
                 oauth_request, self.oauth_consumer, {})
 
-        except oauth2.MissingSignature, e:
+        except oauth2.MissingSignature as e:
             if handle_error:
                 return False
             else:
@@ -57,7 +60,7 @@ class RequestValidatorMixin(object):
         headers is a dictionary of any headers sent in the request
         parameters are the parameters sent from the LMS
         '''
-        raise NotImplemented
+        raise NotImplementedError
 
     def valid_request(self, request):
         '''
@@ -93,7 +96,7 @@ class DjangoRequestValidatorMixin(RequestValidatorMixin):
         return (fake_method or request.method,
                 request.build_absolute_uri(),
                 request.META,
-                (dict(request.POST.iteritems())
+                (dict(iteritems(request.POST))
                     if request.method == 'POST'
                     else parameters))
 
@@ -110,4 +113,3 @@ class WebObRequestValidatorMixin(RequestValidatorMixin):
                 request.url,
                 request.headers,
                 request.POST.mixed())
-

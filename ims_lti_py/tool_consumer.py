@@ -1,12 +1,14 @@
-from collections import defaultdict
-from urllib2 import urlparse, unquote
+from __future__ import unicode_literals, absolute_import, print_function
 
-import oauth2
+from collections import defaultdict
 import time
 
-from launch_params import LaunchParamsMixin
-from request_validator import RequestValidatorMixin
-from utils import InvalidLTIConfigError, generate_identifier
+import oauth2
+from six.moves.urllib.parse import urlparse, unquote
+
+from ims_lti_py.launch_params import LaunchParamsMixin
+from ims_lti_py.request_validator import RequestValidatorMixin
+from ims_lti_py.utils import InvalidLTIConfigError, generate_identifier
 
 accessors = [
     'consumer_key',
@@ -14,8 +16,9 @@ accessors = [
     'launch_url',
 ]
 
+
 class ToolConsumer(LaunchParamsMixin, RequestValidatorMixin, object):
-    def __init__(self, consumer_key, consumer_secret, params = {}):
+    def __init__(self, consumer_key, consumer_secret, params={}):
         '''
         Create new ToolConsumer.
         '''
@@ -39,7 +42,7 @@ class ToolConsumer(LaunchParamsMixin, RequestValidatorMixin, object):
         '''
         Set launch data from a ToolConfig.
         '''
-        if self.launch_url == None:
+        if self.launch_url is None:
             self.launch_url = config.launch_url
             self.custom_params.update(config.custom_params)
 
@@ -47,10 +50,12 @@ class ToolConsumer(LaunchParamsMixin, RequestValidatorMixin, object):
         '''
         Check if required parameters for a tool launch are set.
         '''
-        return self.consumer_key and\
-                self.consumer_secret and\
-                self.resource_link_id and\
-                self.launch_url
+        return (
+            self.consumer_key and
+            self.consumer_secret and
+            self.resource_link_id and
+            self.launch_url
+        )
 
     def _params_update(self):
         return {
@@ -62,7 +67,14 @@ class ToolConsumer(LaunchParamsMixin, RequestValidatorMixin, object):
     def generate_launch_data(self):
         # Validate params
         if not self.has_required_params():
-            raise InvalidLTIConfigError('ToolConsumer does not have all required attributes: consumer_key = %s, consumer_secret = %s, resource_link_id = %s, launch_url = %s' %(self.consumer_key, self.consumer_secret, self.resource_link_id, self.launch_url))
+            raise InvalidLTIConfigError(
+                'ToolConsumer does not have all required attributes: consumer_key = %s, consumer_secret = %s, resource_link_id = %s, launch_url = %s' % (
+                    self.consumer_key,
+                    self.consumer_secret,
+                    self.resource_link_id,
+                    self.launch_url
+                )
+            )
 
         params = self.to_params()
 
@@ -72,8 +84,10 @@ class ToolConsumer(LaunchParamsMixin, RequestValidatorMixin, object):
         params['lti_message_type'] = 'basic-lti-launch-request'
 
         # Get new OAuth consumer
-        consumer = oauth2.Consumer(key = self.consumer_key,\
-                secret = self.consumer_secret)
+        consumer = oauth2.Consumer(
+            key=self.consumer_key,
+            secret=self.consumer_secret
+        )
 
         params.update(self._params_update())
         params.update({'oauth_consumer_key': consumer.key})
@@ -82,12 +96,14 @@ class ToolConsumer(LaunchParamsMixin, RequestValidatorMixin, object):
         if uri.query != '':
             for param in uri.query.split('&'):
                 key, val = param.split('=')
-                if params.get(key) == None:
+                if params.get(key) is None:
                     params[key] = str(val)
 
-        request = oauth2.Request(method = 'POST', 
-                url = self.launch_url,
-                parameters = params)
+        request = oauth2.Request(
+            method='POST',
+            url=self.launch_url,
+            parameters=params
+        )
 
         signature_method = oauth2.SignatureMethod_HMAC_SHA1()
         request.sign_request(signature_method, consumer, None)
@@ -97,7 +113,7 @@ class ToolConsumer(LaunchParamsMixin, RequestValidatorMixin, object):
         # in an html view.
         return_params = {}
         for key in request:
-            if request[key] == None:
+            if request[key] is None:
                 return_params[key] = None
             elif isinstance(request[key], list):
                 return_params[key] = request.get_parameter(key)

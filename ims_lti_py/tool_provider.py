@@ -1,21 +1,18 @@
-from launch_params import LaunchParamsMixin
-from request_validator import (
+from __future__ import unicode_literals, absolute_import, print_function
+
+from collections import defaultdict
+import re
+
+from six.moves.urllib.parse import urlencode, urlsplit, urlunsplit, parse_qsl
+
+from ims_lti_py.launch_params import LaunchParamsMixin
+from ims_lti_py.request_validator import (
     RequestValidatorMixin,
     FlaskRequestValidatorMixin,
     DjangoRequestValidatorMixin,
     WebObRequestValidatorMixin
 )
-from outcome_request import OutcomeRequest
-from collections import defaultdict
-import re
-from urllib import urlencode
-from urlparse import urlsplit, urlunsplit
-
-try:
-    from urlparse import parse_qsl
-except ImportError:
-    # fall back for Python 2.5
-    from cgi import parse_qsl  # NOQA
+from ims_lti_py.outcome_request import OutcomeRequest
 
 
 accessors = [
@@ -106,7 +103,7 @@ class ToolProvider(LaunchParamsMixin, RequestValidatorMixin, object):
         else:
             return default
 
-    def post_replace_result(self, score, outcome_opts=defaultdict(lambda:None), result_data=None):
+    def post_replace_result(self, score, outcome_opts=defaultdict(lambda: None), result_data=None):
         '''
         POSTs the given score to the Tool Consumer with a replaceResult.
 
@@ -122,13 +119,13 @@ class ToolProvider(LaunchParamsMixin, RequestValidatorMixin, object):
         '''
         return self.new_request(outcome_opts).post_replace_result(score, result_data)
 
-    def post_delete_result(self,outcome_opts=defaultdict(lambda:None)):
+    def post_delete_result(self, outcome_opts=defaultdict(lambda:None)):
         '''
         POSTs a delete request to the Tool Consumer.
         '''
         return self.new_request(outcome_opts).post_delete_result()
 
-    def post_read_result(self,outcome_opts=defaultdict(lambda:None)):
+    def post_read_result(self, outcome_opts=defaultdict(lambda:None)):
         '''
         POSTs the given score to the Tool Consumer with a replaceResult, the
         returned OutcomeResponse will have the score.

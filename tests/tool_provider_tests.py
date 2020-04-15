@@ -1,5 +1,9 @@
+from __future__ import unicode_literals, absolute_import, print_function
+
+
 from test_helper import create_test_tp, create_params_tp
 import unittest
+
 
 class TestToolProvider(unittest.TestCase):
     def setUp(self):
@@ -18,15 +22,19 @@ class TestToolProvider(unittest.TestCase):
         '''
         Should generate a return url with messages.
         '''
-        self.assertEqual(self.tp.build_return_url(),
-                self.params['launch_presentation_return_url'])
+        self.assertEqual(
+            self.tp.build_return_url(),
+            self.params['launch_presentation_return_url']
+        )
         self.tp.lti_errormsg = 'user error message'
         self.tp.lti_errorlog = 'lms error log'
         self.tp.lti_msg = 'user message'
         self.tp.lti_log = 'lms message'
-        self.assertEqual(self.tp.build_return_url(),
-                self.params['launch_presentation_return_url'] +
-                '?lti_msg=user+message&lti_errormsg=user+error+message&lti_errorlog=lms+error+log&lti_log=lms+message')
+        self.assertEqual(
+            self.tp.build_return_url(),
+            self.params['launch_presentation_return_url'] +
+            '?lti_msg=user+message&lti_errormsg=user+error+message&lti_errorlog=lms+error+log&lti_log=lms+message'
+        )
 
     def test_roles(self):
         '''

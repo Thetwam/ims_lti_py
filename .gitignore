@@ -3,3 +3,6 @@ tags
 build/
 dist/
 *.egg-info/
+
+# pyenv
+.python-version

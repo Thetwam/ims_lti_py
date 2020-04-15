@@ -1,5 +1,9 @@
+from __future__ import unicode_literals, absolute_import, print_function
+
+
 from ims_lti_py import ToolProvider
 from ims_lti_py import ToolConsumer
+
 
 def create_params_tp():
     '''
@@ -18,11 +22,13 @@ def create_params_tp():
           "roles": "Learner,Instructor,Observer"
     }
 
+
 def create_test_tp():
     '''
     Returns a new ToolProvider.
     '''
     return ToolProvider('hi', 'oi', create_params_tp())
+
 
 def create_params_tc():
     '''
@@ -30,7 +36,7 @@ def create_params_tc():
     '''
     params = create_params_tp()
     params.update({
-            #'resource_link_id': '120988f929-274612',
+            # 'resource_link_id': '120988f929-274612',
             'user_id': '292832126',
             'roles': 'Instructor',
             'lis_person_name_full': 'Jane Q. Public',
@@ -46,12 +52,11 @@ def create_params_tc():
     return params
 
 
-
-def create_test_tc(params = None):
+def create_test_tc(params=None):
     '''
     Returns a new ToolConsumer.
     '''
-    params = create_params_tc() if params == None else params
+    params = create_params_tc() if params is None else params
     consumer_key = '12345'
     tc = ToolConsumer(consumer_key, 'secret', params)
     tc.launch_url = 'http://dr-chuck.com/ims/php-simple/tool.php'
@@ -59,11 +64,10 @@ def create_test_tc(params = None):
     tc.nonce = 'c8350c0e47782d16d2fa48b2090c1d8f'
     tc.set_non_spec_param('lis_person_sourced_id', 'school.edu:user')
     tc.set_non_spec_param('basiclti_submit', 'Launch Endpoint with BasicLTI Data')
-    tc._params_update = lambda:{
+    tc._params_update = lambda: {
             'oauth_nonce': "c8350c0e47782d16d2fa48b2090c1d8f",
             'oauth_timestamp': "1251600739",
             'oauth_scheme': 'body',
         }
-
 
     return tc

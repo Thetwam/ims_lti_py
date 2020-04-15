@@ -1,6 +1,10 @@
+from __future__ import unicode_literals, absolute_import, print_function
+
+
 from ims_lti_py import ToolConsumer
 from test_helper import create_test_tc
 import unittest
+
 
 class TestToolConsumer(unittest.TestCase):
     def test_signature(self):
@@ -10,8 +14,10 @@ class TestToolConsumer(unittest.TestCase):
         tc = create_test_tc()
         result = tc.generate_launch_data()
         self.assertNotEqual(result, None)
-        self.assertEqual(result['oauth_signature'],
-                'o8Oh2XbGx5Wa1yvcEdsdOydoYV4=')
+        self.assertEqual(
+            result['oauth_signature'],
+            'o8Oh2XbGx5Wa1yvcEdsdOydoYV4='
+        )
 
     def test_url_query_parameters(self):
         '''
@@ -21,9 +27,11 @@ class TestToolConsumer(unittest.TestCase):
         tc.launch_url = 'http://dr-chuck.com/ims/php-simple/tool.php?a=1&b=2&c=3%20%26a'
         result = tc.generate_launch_data()
         self.assertNotEqual(result, None)
-        self.assertEquals(result['oauth_signature'], 
-                'kiObbrNVu4vHzd0+yVDHvrsvegQ=')
-        self.assertEquals(result['c'], '3 &a')
+        self.assertEqual(
+            result['oauth_signature'],
+            'kiObbrNVu4vHzd0+yVDHvrsvegQ='
+        )
+        self.assertEqual(result['c'], '3 &a')
 
     def test_signature_port(self):
         '''
@@ -35,24 +43,40 @@ class TestToolConsumer(unittest.TestCase):
             tc.launch_url = url
             ld = tc.generate_launch_data()
             self.assertNotEqual(ld, None)
-            self.assertEquals(ld['oauth_signature'], sig)
+            self.assertEqual(ld['oauth_signature'], sig)
 
-        test_url('http://dr-chuck.com:123/ims/php-simple/tool.php',
-                'I2zrOsXkLvBMbb5HzRXZrZAQVOg=')
-        test_url('http://dr-chuck.com/ims/php-simple/tool.php',
-                'L3VZIDWMLqBVqkGqpBLSjems/QY=')
-        test_url('http://dr-chuck.com:80/ims/php-simple/tool.php',
-                'L3VZIDWMLqBVqkGqpBLSjems/QY=')
-        test_url('http://dr-chuck.com:443/ims/php-simple/tool.php',
-                'NCkKyc8X+XbULcVTuHagTATxcLM=')
-        test_url('https://dr-chuck.com/ims/php-simple/tool.php',
-                'hjIv46SZHK8hEBF0n79Z8al47Oo=')
-        test_url('https://dr-chuck.com:443/ims/php-simple/tool.php',
-                'hjIv46SZHK8hEBF0n79Z8al47Oo=')
-        test_url('https://dr-chuck.com:80/ims/php-simple/tool.php',
-                '94N4Am1bvyInWNXM4WSNyoOMmUc=')
-        test_url('https://dr-chuck.com:80/ims/php-simple/tool.php?oi=hoyt',
-                'g724Rvpu1fC/kkb6sZEmzScUcLg=')
+        test_url(
+            'http://dr-chuck.com:123/ims/php-simple/tool.php',
+            'I2zrOsXkLvBMbb5HzRXZrZAQVOg='
+        )
+        test_url(
+            'http://dr-chuck.com/ims/php-simple/tool.php',
+            'L3VZIDWMLqBVqkGqpBLSjems/QY='
+        )
+        test_url(
+            'http://dr-chuck.com:80/ims/php-simple/tool.php',
+            'L3VZIDWMLqBVqkGqpBLSjems/QY='
+        )
+        test_url(
+            'http://dr-chuck.com:443/ims/php-simple/tool.php',
+            'NCkKyc8X+XbULcVTuHagTATxcLM='
+        )
+        test_url(
+            'https://dr-chuck.com/ims/php-simple/tool.php',
+            'hjIv46SZHK8hEBF0n79Z8al47Oo='
+        )
+        test_url(
+            'https://dr-chuck.com:443/ims/php-simple/tool.php',
+            'hjIv46SZHK8hEBF0n79Z8al47Oo='
+        )
+        test_url(
+            'https://dr-chuck.com:80/ims/php-simple/tool.php',
+            '94N4Am1bvyInWNXM4WSNyoOMmUc='
+        )
+        test_url(
+            'https://dr-chuck.com:80/ims/php-simple/tool.php?oi=hoyt',
+            'g724Rvpu1fC/kkb6sZEmzScUcLg='
+        )
 
     def test_uri_query_parameters(self):
         '''
@@ -81,8 +105,10 @@ class TestToolConsumer(unittest.TestCase):
         result = tc.generate_launch_data()
         self.assertNotEqual(result, None)
         self.assertEqual(result['user_id'], '2')
-        self.assertEqual(result['lti_message_type'],
-                'basic-lti-launch-request')
+        self.assertEqual(
+            result['lti_message_type'],
+            'basic-lti-launch-request'
+        )
 
     def test_allow_lti_version_in_params(self):
         '''

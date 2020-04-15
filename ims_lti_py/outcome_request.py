@@ -1,10 +1,12 @@
+from __future__ import unicode_literals, absolute_import, print_function
+
 from collections import defaultdict
 from lxml import etree, objectify
-
 import oauth2
+from six import iteritems
 
-from outcome_response import OutcomeResponse
-from utils import InvalidLTIConfigError
+from ims_lti_py.outcome_response import OutcomeResponse
+from ims_lti_py.utils import InvalidLTIConfigError
 
 REPLACE_REQUEST = 'replaceResult'
 DELETE_REQUEST = 'deleteResult'
@@ -41,7 +43,7 @@ class OutcomeRequest():
             setattr(self, accessor, None)
 
         # Store specified options in our accessors
-        for (key, val) in opts.iteritems():
+        for (key, val) in iteritems(opts):
             setattr(self, key, val)
 
     @staticmethod
@@ -144,11 +146,11 @@ class OutcomeRequest():
             normalize = http._normalize_headers
 
             def my_normalize(self, headers):
-                print("My Normalize", headers)
+                print(("My Normalize", headers))
                 ret = normalize(self, headers)
                 if 'authorization' in ret:
                     ret['Authorization'] = ret.pop('authorization')
-                print("My Normalize", ret)
+                print(("My Normalize", ret))
                 return ret
             http._normalize_headers = my_normalize
             monkey_patch_function = normalize

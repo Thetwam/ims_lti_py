@@ -1,6 +1,10 @@
+from __future__ import unicode_literals, absolute_import, print_function
+
+
 from ims_lti_py import OutcomeResponse
 
 import unittest
+
 
 class TestOutcomeResponse(unittest.TestCase):
     def setUp(self):

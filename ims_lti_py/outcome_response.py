@@ -1,4 +1,8 @@
+from __future__ import unicode_literals, absolute_import, print_function
+
 from lxml import etree, objectify
+from six import iteritems
+
 
 CODE_MAJOR_CODES = [
     'success',
@@ -48,7 +52,7 @@ class OutcomeResponse():
             setattr(self, opt, None)
 
         # Store specified options in our options member
-        for (key, val) in kwargs.iteritems():
+        for (key, val) in iteritems(kwargs):
             setattr(self, key, val)
 
     @staticmethod
