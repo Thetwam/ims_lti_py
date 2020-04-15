@@ -1,7 +1,7 @@
 from __future__ import unicode_literals, absolute_import, print_function
 
 from lxml import etree, objectify
-from six import iteritems
+from six import binary_type, iteritems
 
 
 CODE_MAJOR_CODES = [
@@ -104,18 +104,19 @@ class OutcomeResponse():
             self.code_major = status_node.imsx_codeMajor
             self.severity = status_node.imsx_severity
             self.description = status_node.imsx_description
-            self.message_ref_identifier = str(
+            self.message_ref_identifier = binary_type(
                 status_node.imsx_messageRefIdentifier)
             self.operation = status_node.imsx_operationRefIdentifier
 
             try:
                 # Try to get the score
-                self.score = str(root.imsx_POXBody.readResultResponse.
-                                 result.resultScore.textString)
+                self.score = binary_type(
+                    root.imsx_POXBody.readResultResponse.result.resultScore.textString
+                )
             except AttributeError:
                 # Not a readResult, just ignore!
                 pass
-        except:
+        except Exception:
             pass
 
     def generate_response_xml(self):
@@ -132,22 +133,22 @@ class OutcomeResponse():
         version.text = 'V1.0'
         message_identifier = etree.SubElement(header_info,
                                               'imsx_messageIdentifier')
-        message_identifier.text = str(self.message_identifier)
+        message_identifier.text = binary_type(self.message_identifier)
         status_info = etree.SubElement(header_info, 'imsx_statusInfo')
         code_major = etree.SubElement(status_info, 'imsx_codeMajor')
-        code_major.text = str(self.code_major)
+        code_major.text = binary_type(self.code_major)
         severity = etree.SubElement(status_info, 'imsx_severity')
-        severity.text = str(self.severity)
+        severity.text = binary_type(self.severity)
         description = etree.SubElement(status_info, 'imsx_description')
-        description.text = str(self.description)
+        description.text = binary_type(self.description)
         message_ref_identifier = etree.SubElement(
             status_info,
             'imsx_messageRefIdentifier')
-        message_ref_identifier.text = str(self.message_ref_identifier)
+        message_ref_identifier.text = binary_type(self.message_ref_identifier)
         operation_ref_identifier = etree.SubElement(
             status_info,
             'imsx_operationRefIdentifier')
-        operation_ref_identifier.text = str(self.operation)
+        operation_ref_identifier.text = binary_type(self.operation)
 
         body = etree.SubElement(root, 'imsx_POXBody')
         response = etree.SubElement(body, '%s%s' % (self.operation,
@@ -159,6 +160,6 @@ class OutcomeResponse():
             language = etree.SubElement(result_score, 'language')
             language.text = 'en'
             text_string = etree.SubElement(result_score, 'textString')
-            text_string.text = str(self.score)
+            text_string.text = binary_type(self.score)
 
         return '<?xml version="1.0" encoding="UTF-8"?>' + etree.tostring(root)

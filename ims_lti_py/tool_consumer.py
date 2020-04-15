@@ -4,6 +4,7 @@ from collections import defaultdict
 import time
 
 import oauth2
+from six import binary_type
 from six.moves.urllib.parse import urlparse, unquote
 
 from ims_lti_py.launch_params import LaunchParamsMixin
@@ -59,8 +60,8 @@ class ToolConsumer(LaunchParamsMixin, RequestValidatorMixin, object):
 
     def _params_update(self):
         return {
-            'oauth_nonce': str(generate_identifier()),
-            'oauth_timestamp': str(int(time.time())),
+            'oauth_nonce': binary_type(generate_identifier()),
+            'oauth_timestamp': binary_type(int(time.time())),
             'oauth_scheme': 'body'
         }
 
@@ -97,7 +98,7 @@ class ToolConsumer(LaunchParamsMixin, RequestValidatorMixin, object):
             for param in uri.query.split('&'):
                 key, val = param.split('=')
                 if params.get(key) is None:
-                    params[key] = str(val)
+                    params[key] = binary_type(val)
 
         request = oauth2.Request(
             method='POST',

@@ -3,7 +3,7 @@ from __future__ import unicode_literals, absolute_import, print_function
 from collections import defaultdict
 from lxml import etree, objectify
 import oauth2
-from six import iteritems
+from six import binary_type, iteritems
 
 from ims_lti_py.outcome_response import OutcomeResponse
 from ims_lti_py.utils import InvalidLTIConfigError
@@ -175,7 +175,7 @@ class OutcomeRequest():
         Parse Outcome Request data from XML.
         '''
         root = objectify.fromstring(xml)
-        self.message_identifier = str(
+        self.message_identifier = binary_type(
             root.imsx_POXHeader.imsx_POXRequestHeaderInfo.
             imsx_messageIdentifier)
         try:
@@ -184,9 +184,11 @@ class OutcomeRequest():
             # Get result sourced id from resultRecord
             self.lis_result_sourcedid = result.resultRecord.\
                 sourcedGUID.sourcedId
-            self.score = str(result.resultRecord.result.
-                             resultScore.textString)
-        except:
+            self.score = binary_type(
+                result.resultRecord.result.
+                resultScore.textString
+            )
+        except Exception:
             pass
 
         try:
@@ -195,7 +197,7 @@ class OutcomeRequest():
             # Get result sourced id from resultRecord
             self.lis_result_sourcedid = result.resultRecord.\
                 sourcedGUID.sourcedId
-        except:
+        except Exception:
             pass
 
         try:
@@ -204,7 +206,7 @@ class OutcomeRequest():
             # Get result sourced id from resultRecord
             self.lis_result_sourcedid = result.resultRecord.\
                 sourcedGUID.sourcedId
-        except:
+        except Exception:
             pass
 
     def has_required_attributes(self):
